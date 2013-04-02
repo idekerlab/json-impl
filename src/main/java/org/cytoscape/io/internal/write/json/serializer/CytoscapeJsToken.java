@@ -5,7 +5,7 @@ import static org.cytoscape.view.presentation.property.BasicVisualLexicon.*;
 
 
 public enum CytoscapeJsToken {
-	SELECTOR("selector"), STYLE("style"), CSS("css"), TITLE("title"), NODE("node"), EDGE("edge"),
+	SELECTOR("selector"), STYLE("style"), CSS("css"), TITLE("title"), NODE("node"), EDGE("edge"),SELECTED(":selected"),
 	
 	////////////////// Style Tags////////////////////
 	
