@@ -56,6 +56,7 @@ public class JsVisualStyleSerializer extends JsonSerializer<VisualStyle> {
 		jg.writeObjectFieldStart(CSS.toString());
 		jg.writeStringField(BACKGROUND_COLOR.toString(),
 				decodeColor((Color) vs.getDefaultValue(BasicVisualLexicon.NODE_SELECTED_PAINT)));
+
 		jg.writeStringField(LINE_COLOR.toString(),
 				decodeColor((Color) vs.getDefaultValue(BasicVisualLexicon.EDGE_STROKE_SELECTED_PAINT)));
 		jg.writeStringField(SOURCE_ARROW_COLOR.toString().toString(),
@@ -77,9 +78,14 @@ public class JsVisualStyleSerializer extends JsonSerializer<VisualStyle> {
 				decodeColor((Color) vs.getDefaultValue(BasicVisualLexicon.NODE_FILL_COLOR)));
 		jg.writeStringField(COLOR.toString(),
 				decodeColor((Color) vs.getDefaultValue(BasicVisualLexicon.NODE_LABEL_COLOR)));
-//		jg.writeStringField(TEXT_HALIGN.toString(), "right");
-//		jg.writeStringField(TEXT_VALIGN.toString(), "bottom");
+		
 		jg.writeNumberField(FONT_WEIGHT.toString(), 100);
+		
+		// TODO: implement dynamic generator for these values
+		jg.writeStringField(TEXT_VALIGN.toString(), "center");
+		jg.writeStringField(TEXT_HALIGN.toString(), "center");
+		jg.writeNumberField(TEXT_OUTLINE_WIDTH.toString(), 0);
+		jg.writeNumberField(FONT_SIZE.toString(), vs.getDefaultValue(BasicVisualLexicon.NODE_LABEL_FONT_SIZE));
 
 		jg.writeStringField(BORDER_COLOR.toString(),
 				decodeColor((Color) vs.getDefaultValue(BasicVisualLexicon.NODE_BORDER_PAINT)));
@@ -104,29 +110,29 @@ public class JsVisualStyleSerializer extends JsonSerializer<VisualStyle> {
 		Collection<VisualMappingFunction<?, ?>> mappings = vs.getAllVisualMappingFunctions();
 
 		for (VisualMappingFunction<?, ?> mapping : mappings) {
-			if(mapping.getVisualProperty().getTargetDataType() != CyNode.class)
+			if (mapping.getVisualProperty().getTargetDataType() != CyNode.class)
 				continue;
-			
+
 			if (mapping instanceof PassthroughMapping && mapping.getVisualProperty() == BasicVisualLexicon.NODE_LABEL) {
 				jg.writeStringField(CONTENT.toString(), "data(" + mapping.getMappingColumnName() + ")");
 			}
 		}
 
 	}
-	
+
 	private final void generateDiscreteMapping() {
-		
+
 	}
-	
+
 	private void createEdgeMapping(final VisualStyle vs, JsonGenerator jg) throws IOException {
 		// TODO implememt this
 		// Passthrough
 		Collection<VisualMappingFunction<?, ?>> mappings = vs.getAllVisualMappingFunctions();
 
 		for (VisualMappingFunction<?, ?> mapping : mappings) {
-			if(mapping.getVisualProperty().getTargetDataType() != CyEdge.class)
+			if (mapping.getVisualProperty().getTargetDataType() != CyEdge.class)
 				continue;
-			
+
 			if (mapping instanceof PassthroughMapping && mapping.getVisualProperty() == BasicVisualLexicon.EDGE_LABEL) {
 				jg.writeStringField(CONTENT.toString(), "data(" + mapping.getMappingColumnName() + ")");
 			}
@@ -144,6 +150,12 @@ public class JsVisualStyleSerializer extends JsonSerializer<VisualStyle> {
 				decodeColor((Color) vs.getDefaultValue(BasicVisualLexicon.EDGE_STROKE_UNSELECTED_PAINT)));
 		jg.writeNumberField(OPACITY.toString(), vs.getDefaultValue(BasicVisualLexicon.EDGE_TRANSPARENCY) / 255f);
 
+		jg.writeStringField(TARGET_ARROW_SHAPE.toString(), 
+				vs.getDefaultValue(BasicVisualLexicon.EDGE_TARGET_ARROW_SHAPE).getDisplayName().toLowerCase());
+		jg.writeStringField(SOURCE_ARROW_SHAPE.toString(), 
+				vs.getDefaultValue(BasicVisualLexicon.EDGE_SOURCE_ARROW_SHAPE).getDisplayName().toLowerCase());
+		
+		
 		// Mappings
 		createEdgeMapping(vs, jg);
 
